@@ -17,15 +17,20 @@ async function init() {
   await mongoose.connect(MONGO_URI);
   console.log("[user-v2] Connected to Mongo");
 
-  const conn = await amqp.connect(RABBIT_URL);
-  channel = await conn.createChannel();
-  await channel.assertExchange("user.sync", "topic", { durable: true });
-  console.log("[user-v2] Connected to RabbitMQ");
+  try {
+    const conn = await amqp.connect(RABBIT_URL);
+    channel = await conn.createChannel();
+    await channel.assertExchange("user.sync", "topic", { durable: true });
+    console.log("[user-v2] Connected to RabbitMQ");
+  } catch (err) {
+    console.error("[user-v2] Failed to connect to RabbitMQ (will continue without events)", err);
+  }
 }
+
 init().catch((err) => {
-  console.error("Init error in user-v2", err);
-  process.exit(1);
+  console.error("[user-v2] Fatal init error", err);
 });
+
 
 function publishUserUpdatedEvent(payload) {
   if (!channel) return;
