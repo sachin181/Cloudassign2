@@ -1,0 +1,14 @@
+{
+    "userService": {
+      "v1Url": "http://user-v1:3001",
+      "v2Url": "http://user-v2:3002",
+      "split": {
+        "v1": 70,
+        "v2": 30
+      }
+    },
+    "orderService": {
+      "url": "http://order-ms:3003"
+    }
+  }
+  
