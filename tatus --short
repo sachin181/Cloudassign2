@@ -1,0 +1,118 @@
+[1mdiff --git a/user-v1/index.js b/user-v1/index.js[m
+[1mindex 614c111..4d7e290 100644[m
+[1m--- a/user-v1/index.js[m
+[1m+++ b/user-v1/index.js[m
+[36m@@ -35,8 +35,10 @@[m [mfunction publishUserUpdatedEvent(payload) {[m
+   });[m
+ }[m
+ [m
+[31m-// POST /users (create new user)[m
+[31m-app.post("/users", async (req, res) => {[m
+[32m+[m[32m// NOTE: routes are rooted at "/" because gateway strips "/users"[m
+[32m+[m
+[32m+[m[32m// POST /users  →  POST /  (from gateway)[m
+[32m+[m[32mapp.post("/", async (req, res) => {[m
+   try {[m
+     const { id, email, address } = req.body;[m
+     if (!id || !email || !address) {[m
+[36m@@ -46,13 +48,13 @@[m [mapp.post("/users", async (req, res) => {[m
+     await user.save();[m
+     res.status(201).json(user);[m
+   } catch (err) {[m
+[31m-    console.error("POST /users error", err);[m
+[32m+[m[32m    console.error("[user-v1] POST / error", err);[m
+     res.status(500).json({ error: "Internal error" });[m
+   }[m
+ });[m
+ [m
+[31m-// PUT /users/:id/email (update email + publish event)[m
+[31m-app.put("/users/:id/email", async (req, res) => {[m
+[32m+[m[32m// PUT /users/:id/email  →  PUT /:id/email[m
+[32m+[m[32mapp.put("/:id/email", async (req, res) => {[m
+   try {[m
+     const { email } = req.body;[m
+     if (!email) return res.status(400).json({ error: "email required" });[m
+[36m@@ -74,13 +76,13 @@[m [mapp.put("/users/:id/email", async (req, res) => {[m
+ [m
+     res.json(user);[m
+   } catch (err) {[m
+[31m-    console.error("PUT /users/:id/email error", err);[m
+[32m+[m[32m    console.error("[user-v1] PUT /:id/email error", err);[m
+     res.status(500).json({ error: "Internal error" });[m
+   }[m
+ });[m
+ [m
+[31m-// PUT /users/:id/address (update address + publish event)[m
+[31m-app.put("/users/:id/address", async (req, res) => {[m
+[32m+[m[32m// PUT /users/:id/address  →  PUT /:id/address[m
+[32m+[m[32mapp.put("/:id/address", async (req, res) => {[m
+   try {[m
+     const { address } = req.body;[m
+     if (!address) return res.status(400).json({ error: "address required" });[m
+[36m@@ -102,7 +104,7 @@[m [mapp.put("/users/:id/address", async (req, res) => {[m
+ [m
+     res.json(user);[m
+   } catch (err) {[m
+[31m-    console.error("PUT /users/:id/address error", err);[m
+[32m+[m[32m    console.error("[user-v1] PUT /:id/address error", err);[m
+     res.status(500).json({ error: "Internal error" });[m
+   }[m
+ });[m
+[1mdiff --git a/user-v2/index.js b/user-v2/index.js[m
+[1mindex 3437397..3bbd24b 100644[m
+[1m--- a/user-v2/index.js[m
+[1m+++ b/user-v2/index.js[m
+[36m@@ -34,8 +34,8 @@[m [mfunction publishUserUpdatedEvent(payload) {[m
+   });[m
+ }[m
+ [m
+[31m-// POST /users (supports phone as optional)[m
+[31m-app.post("/users", async (req, res) => {[m
+[32m+[m[32m// POST /users  →  POST /[m
+[32m+[m[32mapp.post("/", async (req, res) => {[m
+   try {[m
+     const { id, email, address, phone } = req.body;[m
+     if (!id || !email || !address) {[m
+[36m@@ -45,13 +45,13 @@[m [mapp.post("/users", async (req, res) => {[m
+     await user.save();[m
+     res.status(201).json(user);[m
+   } catch (err) {[m
+[31m-    console.error("[user-v2] POST /users error", err);[m
+[32m+[m[32m    console.error("[user-v2] POST / error", err);[m
+     res.status(500).json({ error: "Internal error" });[m
+   }[m
+ });[m
+ [m
+[31m-// PUT /users/:id/email[m
+[31m-app.put("/users/:id/email", async (req, res) => {[m
+[32m+[m[32m// PUT /users/:id/email  →  PUT /:id/email[m
+[32m+[m[32mapp.put("/:id/email", async (req, res) => {[m
+   try {[m
+     const { email } = req.body;[m
+     if (!email) return res.status(400).json({ error: "email required" });[m
+[36m@@ -73,13 +73,13 @@[m [mapp.put("/users/:id/email", async (req, res) => {[m
+ [m
+     res.json(user);[m
+   } catch (err) {[m
+[31m-    console.error("[user-v2] PUT /users/:id/email error", err);[m
+[32m+[m[32m    console.error("[user-v2] PUT /:id/email error", err);[m
+     res.status(500).json({ error: "Internal error" });[m
+   }[m
+ });[m
+ [m
+[31m-// PUT /users/:id/address[m
+[31m-app.put("/users/:id/address", async (req, res) => {[m
+[32m+[m[32m// PUT /users/:id/address  →  PUT /:id/address[m
+[32m+[m[32mapp.put("/:id/address", async (req, res) => {[m
+   try {[m
+     const { address } = req.body;[m
+     if (!address) return res.status(400).json({ error: "address required" });[m
+[36m@@ -101,7 +101,7 @@[m [mapp.put("/users/:id/address", async (req, res) => {[m
+ [m
+     res.json(user);[m
+   } catch (err) {[m
+[31m-    console.error("[user-v2] PUT /users/:id/address error", err);[m
+[32m+[m[32m    console.error("[user-v2] PUT /:id/address error", err);[m
+     res.status(500).json({ error: "Internal error" });[m
+   }[m
+ });[m

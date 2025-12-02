@@ -34,8 +34,8 @@ function publishUserUpdatedEvent(payload) {
   });
 }
 
-// POST /users (supports phone as optional)
-app.post("/users", async (req, res) => {
+// POST /users  →  POST /
+app.post("/", async (req, res) => {
   try {
     const { id, email, address, phone } = req.body;
     if (!id || !email || !address) {
@@ -45,13 +45,13 @@ app.post("/users", async (req, res) => {
     await user.save();
     res.status(201).json(user);
   } catch (err) {
-    console.error("[user-v2] POST /users error", err);
+    console.error("[user-v2] POST / error", err);
     res.status(500).json({ error: "Internal error" });
   }
 });
 
-// PUT /users/:id/email
-app.put("/users/:id/email", async (req, res) => {
+// PUT /users/:id/email  →  PUT /:id/email
+app.put("/:id/email", async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: "email required" });
@@ -73,13 +73,13 @@ app.put("/users/:id/email", async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.error("[user-v2] PUT /users/:id/email error", err);
+    console.error("[user-v2] PUT /:id/email error", err);
     res.status(500).json({ error: "Internal error" });
   }
 });
 
-// PUT /users/:id/address
-app.put("/users/:id/address", async (req, res) => {
+// PUT /users/:id/address  →  PUT /:id/address
+app.put("/:id/address", async (req, res) => {
   try {
     const { address } = req.body;
     if (!address) return res.status(400).json({ error: "address required" });
@@ -101,7 +101,7 @@ app.put("/users/:id/address", async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.error("[user-v2] PUT /users/:id/address error", err);
+    console.error("[user-v2] PUT /:id/address error", err);
     res.status(500).json({ error: "Internal error" });
   }
 });

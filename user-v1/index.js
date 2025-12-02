@@ -35,8 +35,10 @@ function publishUserUpdatedEvent(payload) {
   });
 }
 
-// POST /users (create new user)
-app.post("/users", async (req, res) => {
+// NOTE: routes are rooted at "/" because gateway strips "/users"
+
+// POST /users  →  POST /  (from gateway)
+app.post("/", async (req, res) => {
   try {
     const { id, email, address } = req.body;
     if (!id || !email || !address) {
@@ -46,13 +48,13 @@ app.post("/users", async (req, res) => {
     await user.save();
     res.status(201).json(user);
   } catch (err) {
-    console.error("POST /users error", err);
+    console.error("[user-v1] POST / error", err);
     res.status(500).json({ error: "Internal error" });
   }
 });
 
-// PUT /users/:id/email (update email + publish event)
-app.put("/users/:id/email", async (req, res) => {
+// PUT /users/:id/email  →  PUT /:id/email
+app.put("/:id/email", async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: "email required" });
@@ -74,13 +76,13 @@ app.put("/users/:id/email", async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.error("PUT /users/:id/email error", err);
+    console.error("[user-v1] PUT /:id/email error", err);
     res.status(500).json({ error: "Internal error" });
   }
 });
 
-// PUT /users/:id/address (update address + publish event)
-app.put("/users/:id/address", async (req, res) => {
+// PUT /users/:id/address  →  PUT /:id/address
+app.put("/:id/address", async (req, res) => {
   try {
     const { address } = req.body;
     if (!address) return res.status(400).json({ error: "address required" });
@@ -102,7 +104,7 @@ app.put("/users/:id/address", async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.error("PUT /users/:id/address error", err);
+    console.error("[user-v1] PUT /:id/address error", err);
     res.status(500).json({ error: "Internal error" });
   }
 });
